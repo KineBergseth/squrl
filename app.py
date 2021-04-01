@@ -29,7 +29,6 @@ squirrel_census.dropna(inplace=True)
 # convert dataframe to a list of dictionaries [{column -> value}, … , {column -> value}]
 squirrel_data = squirrel_census.to_dict('records')
 
-
 # Encode the local sound files
 # https://life.hawkeoptics.com/woodland-stalking/
 kuk_sound = 'assets/squirrel-kuk.wav'
@@ -41,7 +40,6 @@ encoded_quaa_sound = base64.b64encode(open(quaa_sound, 'rb').read())
 encoded_moan_sound = base64.b64encode(open(moan_sound, 'rb').read())
 
 ns = Namespace("myNamespace", "mySubNamespace")
-
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
@@ -80,6 +78,21 @@ app.layout = html.Div(
         ),
         # SQUIRREL INFO
         html.Div(id="squirrel-facts"),
+
+        # SOUNDS
+        html.Div(
+            children=
+            [
+                html.Div([html.P("Kuks"), html.Img(src='assets/squ2.png', className='header-2', id='sound-kuks')],
+                         className="k"),
+                html.Div([html.P("q"), html.Img(src='assets/squ2.png', className='header-2', id='sound-quaas')],
+                         className="div16"),
+                html.Div([html.P("Moans"), html.Img(src='assets/squ2.png', className='header-2', id='sound-moans')],
+                         className="m"),
+            ],
+            className="squirrel-map",
+        ),
+        # invisible sound containers
         html.Div(id="placeholder1", style={"display": "none"}),
         html.Div(id="placeholder2", style={"display": "none"}),
         html.Div(id="placeholder3", style={"display": "none"}),
@@ -98,7 +111,7 @@ def squirrel_click(feature):
         age_image = ""
         location_image = ""
         if facts['Age'] == 'Adult':
-            age_image = "assets/squ2.png"
+            age_image = "assets/squ4.png"
         elif facts['Age'] == 'Juvenile':
             age_image = "assets/squ1.jpg"
         else:
@@ -112,35 +125,26 @@ def squirrel_click(feature):
             location_image = "assets/squirrel.png"
 
         return html.Div(children=[
-            html.Div(html.P(f"Squirrel ID: {facts['Unique Squirrel ID']}"), className="div1"),
-            html.Div([html.P(facts['Primary Fur Color']), html.P("color")], className="div2"),
-            html.Div(html.Img(src='assets/squ2.png', className='header-2'), className="div3"),
-            html.Div([html.P(facts['Highlight Fur Color']), html.P("color")], className="div4"),
-            html.Div(html.Img(src='assets/squ2.png', className='header-2'), className="div5"),
-            html.Div([html.P("POS"), html.P("lat"), html.P("long")], className="div6"),
-            html.Div([html.P(""), html.P(''), html.P("")], className="div7"),
-            html.Div(html.P("28th october"), className="div8"),
-            html.Div(html.P(facts['Shift']), className="div9"),
-            html.Div([html.P("Running"), html.Img(src='assets/squ2.png', className='header-2')],
-                     className="div10"),
-            html.Div([html.P("Chasing"), html.Img(src='assets/squ2.png', className='header-2')],
-                     className="div11"),
-            html.Div([html.P("Climbing"), html.Img(src='assets/squ2.png', className='header-2')],
-                     className="div12"),
-            html.Div([html.P("Eating"), html.Img(src='assets/squ2.png', className='header-2')],
-                     className="div13"),
-            html.Div([html.P("Foraging"), html.Img(src='assets/squ2.png', className='header-2')],
-                     className="div14"),
-            html.Div([html.P("Kuks"), html.Img(src='assets/squ2.png', className='header-2', id='sound-kuks')],
-                     className="div15"),
-            html.Div([html.P("Quaas"), html.Img(src='assets/squ2.png', className='header-2', id='sound-quaas')],
-                     className="div16"),
-            html.Div([html.P("Moans"), html.Img(src='assets/squ2.png', className='header-2', id='sound-moans')],
-                     className="div17"),
+            html.Div([html.P("PRIMARY COLOR"), html.P(facts['Primary Fur Color'])], className="div1"),
+            html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png',
+                              className='header-2'), className="div2"),
+            html.Div([html.P("HIGHLIGHT COLOR"), html.P(facts['Highlight Fur Color'])], className="div3"),
+            html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png', className='header-2'), className="div4"),
+            html.Div([html.P("POS"), html.P("lat"), html.P("long")], className="div5"),
             html.Div([html.P(f"Age: {facts['Age']}"), html.Img(src=age_image, className='header-22')],
-                     className="div18"),
+                     className="div6"),
             html.Div([html.P(f"Elevation: {facts['Location']}"),
-                      html.Img(src=location_image, className='header-22')], className="div19"),
+                      html.Img(src=location_image, className='header-22')], className="div7"),
+            html.Div([html.P("Running"), html.Img(src='assets/squ2.png', className='header-2')],
+                     className="div8"),
+            html.Div([html.P("Chasing"), html.Img(src='assets/squ2.png', className='header-2')],
+                     className="div9"),
+            html.Div([html.P("Climbing"), html.Img(src='assets/squ2.png', className='header-2')],
+                     className="div10"),
+            html.Div([html.P("Eating"), html.Img(src='assets/squ2.png', className='header-2')],
+                     className="div11"),
+            html.Div([html.P("Foraging"), html.Img(src='assets/squ2.png', className='header-2')],
+                     className="div12"),
         ], className='parent', )
 
 
