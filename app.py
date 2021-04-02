@@ -130,37 +130,37 @@ def squirrel_click(feature):
         else:
             location_image = "assets/tree2.png"
 
-        # choose image based on action. colored images means that the squirrel does that activity
+        # choose html code based on action of the squirrel. not active alternatives will be colorless
         if facts['Running']:
-            running_image = "assets/running_true.png"
+            running_image = html.Div([html.Img(src="assets/running.png", className='activity'), html.P("Running")], className="div8")
         else:
-            running_image = "assets/running_false.png"
+            running_image = html.Div([html.Img(src="assets/running.png", className='activity hidden'), html.P("Running")], className="div8 hidden")
 
         if facts['Chasing']:
-            chasing_image = "assets/chasing_true.png"
+            chasing_image = html.Div([html.Img(src="assets/chasing.png", className='activity'), html.P("Chasing")], className="div9")
         else:
-            chasing_image = "assets/chasing_false.png"
+            chasing_image = html.Div([html.Img(src="assets/chasing.png", className='activity hidden'), html.P("Chasing")], className="div9 hidden")
 
         if facts['Climbing']:
-            climbing_image = "assets/climbing_true.png"
+            climbing_image = html.Div([html.Img(src="assets/climbing.png", className='activity'), html.P("Climbing")], className="div10")
         else:
-            climbing_image = "assets/climbing_false.png"
+            climbing_image = html.Div([html.Img(src="assets/climbing.png", className='activity hidden'), html.P("Climbing")], className="div10 hidden")
 
         if facts['Eating']:
-            eating_image = "assets/eating_true.png"
+            eating_image = html.Div([html.Img(src="assets/eating.png", className='activity'), html.P("Eating")], className="div11")
         else:
-            eating_image = "assets/eating_false.png"
+            eating_image = html.Div([html.Img(src="assets/eating.png", className='activity hidden'), html.P("Eating")], className="div11 hidden")
 
         if facts['Foraging']:
-            foraging_image = "assets/foraging_true.png"
+            foraging_image = html.Div([html.Img(src="assets/foraging.png", className='activity'), html.P("Foraging")], className="div12")
         else:
-            foraging_image = "assets/foraging_false.png"
+            foraging_image = html.Div([html.Img(src="assets/foraging.png", className='activity hidden'), html.P("Foraging")], className="div12 hidden")
 
         return html.Div(children=[
-            html.Div([html.P("PRIMARY COLOR"), html.P(facts['Primary Fur Color'])], className="div1"),
+            html.Div([html.P("PRIMARY COLOR  "), html.Span(facts['Primary Fur Color'])], className="div1"),
             html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png',
                               className='color_circle'), className="div2"),
-            html.Div([html.P("HIGHLIGHT COLOR"), html.P(facts['Highlight Fur Color'])], className="div3"),
+            html.Div([html.P("HIGHLIGHT COLOR"), html.Span(facts['Highlight Fur Color'])], className="div3"),
             html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png',
                               className='color_circle'), className="div4"),
             html.Div([html.P("POS"), html.P("lat"), html.P("long")], className="div5"),
@@ -168,17 +168,12 @@ def squirrel_click(feature):
                      className="div6"),
             html.Div([html.P(f"Elevation: {facts['Location']}"),
                       html.Img(src=location_image, className='header-222')], className="div7"),
-            html.Div([html.Img(src=running_image, className='header-2'), html.P("Running")],
-                     className="div8"),
-            html.Div([html.Img(src=chasing_image, className='header-2'), html.P("Chasing")],
-                     className="div9"),
-            html.Div([html.Img(src=climbing_image, className='header-2'), html.P("Climbing")],
-                     className="div10"),
-            html.Div([html.Img(src=eating_image, className='header-2'), html.P("Eating")],
-                     className="div11"),
-            html.Div([html.Img(src=foraging_image, className='header-2'), html.P("Foraging")],
-                     className="div12"),
-        ], className='parent', )
+            running_image,
+            chasing_image,
+            climbing_image,
+            eating_image,
+            foraging_image,
+        ], className='squirrel-data', )
 
 
 @app.callback(Output("placeholder1", "children"),
