@@ -115,7 +115,6 @@ def squirrel_click(feature):
         # choose image paths based on the fact that applies to a certain squirrel
         primary_color = ""
         highlight_color = ""
-        location_image = ""
 
         if facts['Age'] == 'Adult':
             age_image = "assets/age_adult.png"
