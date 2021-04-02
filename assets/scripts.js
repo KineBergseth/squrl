@@ -7,6 +7,6 @@ window.myNamespace = Object.assign({}, window.myNamespace, {
 });
 
 var greenIcon = L.icon({
-    iconUrl: 'https://www.freeiconspng.com/uploads/squirrel-png-20.png',
-    iconSize:     [45, 80], // size of the icon
+    iconUrl: 'assets/map_marker.png',
+    iconSize:     [78, 77], // size of the icon
 });

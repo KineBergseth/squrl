@@ -39,14 +39,18 @@ encoded_kuk_sound = base64.b64encode(open(kuk_sound, 'rb').read())
 encoded_quaa_sound = base64.b64encode(open(quaa_sound, 'rb').read())
 encoded_moan_sound = base64.b64encode(open(moan_sound, 'rb').read())
 
-ns = Namespace("myNamespace", "mySubNamespace")
-
 app = dash.Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = 'SQURL'
 server = app.server
 
 # Find Lat Long center to set map center
 lat_center = sum(squirrel_census['lat']) / len(squirrel_census['lat'])
 long_center = sum(squirrel_census['lon']) / len(squirrel_census['lon'])
+
+data = dlx.geojson_to_geobuf(dlx.dicts_to_geojson(squirrel_data))
+
+ns = Namespace("myNamespace", "mySubNamespace")
+nz = Namespace("dlx", "scatter")
 
 # get map style
 url = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
@@ -58,7 +62,6 @@ app.layout = html.Div(
         # HEADER
         html.Div(
             children=[
-                html.Img(src='assets/squ2.png', id='header-logo'),
                 html.H1('SQURL', id='header-text'),
             ],
             className="header",
@@ -69,9 +72,10 @@ app.layout = html.Div(
             children=
             [
                 dl.Map(center=[lat_center, long_center], zoom=15, children=[
-                    dl.TileLayer(url=url, attribution=attribution), dl.Marker(position=(56, 10)),
-                    dl.GeoJSON(data=dlx.geojson_to_geobuf(dlx.dicts_to_geojson(squirrel_data)),
-                               id="unique-squirrel-id", format="geobuf", options=dict(pointToLayer=ns("pointToLayer"))),
+                    dl.TileLayer(url=url, attribution=attribution),
+                    dl.GeoJSON(data=data, id="unique-squirrel-id", format="geobuf", cluster=True,
+                               zoomToBoundsOnClick=True, superClusterOptions={"radius": 50},
+                               options=dict(pointToLayer=ns("pointToLayer"))),
                 ], style={'width': '100%', 'height': '75vh', "display": "block"}, id="map"),
             ],
             className="squirrel-map",
@@ -90,7 +94,7 @@ app.layout = html.Div(
                 html.Div([html.P("Moans"), html.Img(src='assets/squ2.png', className='header-2', id='sound-moans')],
                          className="m"),
             ],
-            className="squirrel-map",
+            className="squirrel-sounds",
         ),
         # invisible sound containers
         html.Div(id="placeholder1", style={"display": "none"}),
@@ -102,48 +106,78 @@ app.layout = html.Div(
 )
 
 
+# print squirrel fact table when a marker is clicked
 @app.callback(Output("squirrel-facts", "children"), [Input("unique-squirrel-id", "click_feature")])
 def squirrel_click(feature):
-    if feature is not None:
+    # user must have clicker on a squirrel marker
+    if (feature is not None) and not (feature['properties']['cluster']):
         facts = feature['properties']
+        # choose image paths based on the fact that applies to a certain squirrel
         primary_color = ""
         highlight_color = ""
-        age_image = ""
         location_image = ""
+
         if facts['Age'] == 'Adult':
-            age_image = "assets/squ4.png"
+            age_image = "assets/age_adult.png"
         elif facts['Age'] == 'Juvenile':
-            age_image = "assets/squ1.jpg"
+            age_image = "assets/age_juvenile.png"
         else:
-            age_image = "assets/squ22.png"
+            age_image = "assets/age_unknown.png"
 
         if facts['Location'] == 'Ground Plane':
-            location_image = "assets/bush.png"
+            location_image = "assets/ground.png"
         elif facts['Location'] == 'Above Ground':
-            location_image = "assets/tree2.png"
+            location_image = "assets/tree.png"
         else:
-            location_image = "assets/squirrel.png"
+            location_image = "assets/tree2.png"
+
+        # choose image based on action. colored images means that the squirrel does that activity
+        if facts['Running']:
+            running_image = "assets/running_true.png"
+        else:
+            running_image = "assets/running_false.png"
+
+        if facts['Chasing']:
+            chasing_image = "assets/chasing_true.png"
+        else:
+            chasing_image = "assets/chasing_false.png"
+
+        if facts['Climbing']:
+            climbing_image = "assets/climbing_true.png"
+        else:
+            climbing_image = "assets/climbing_false.png"
+
+        if facts['Eating']:
+            eating_image = "assets/eating_true.png"
+        else:
+            eating_image = "assets/eating_false.png"
+
+        if facts['Foraging']:
+            foraging_image = "assets/foraging_true.png"
+        else:
+            foraging_image = "assets/foraging_false.png"
 
         return html.Div(children=[
             html.Div([html.P("PRIMARY COLOR"), html.P(facts['Primary Fur Color'])], className="div1"),
             html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png',
-                              className='header-2'), className="div2"),
+                              className='color_circle'), className="div2"),
             html.Div([html.P("HIGHLIGHT COLOR"), html.P(facts['Highlight Fur Color'])], className="div3"),
-            html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png', className='header-2'), className="div4"),
+            html.Div(html.Img(src='https://www.transparentpng.com/thumb/circle/0JKSf2-circle-icon.png',
+                              className='color_circle'), className="div4"),
             html.Div([html.P("POS"), html.P("lat"), html.P("long")], className="div5"),
             html.Div([html.P(f"Age: {facts['Age']}"), html.Img(src=age_image, className='header-22')],
                      className="div6"),
             html.Div([html.P(f"Elevation: {facts['Location']}"),
-                      html.Img(src=location_image, className='header-22')], className="div7"),
-            html.Div([html.P("Running"), html.Img(src='assets/squ2.png', className='header-2')],
+                      html.Img(src=location_image, className='header-222')], className="div7"),
+            html.Div([html.Img(src=running_image, className='header-2'), html.P("Running")],
                      className="div8"),
-            html.Div([html.P("Chasing"), html.Img(src='assets/squ2.png', className='header-2')],
+            html.Div([html.Img(src=chasing_image, className='header-2'), html.P("Chasing")],
                      className="div9"),
-            html.Div([html.P("Climbing"), html.Img(src='assets/squ2.png', className='header-2')],
+            html.Div([html.Img(src=climbing_image, className='header-2'), html.P("Climbing")],
                      className="div10"),
-            html.Div([html.P("Eating"), html.Img(src='assets/squ2.png', className='header-2')],
+            html.Div([html.Img(src=eating_image, className='header-2'), html.P("Eating")],
                      className="div11"),
-            html.Div([html.P("Foraging"), html.Img(src='assets/squ2.png', className='header-2')],
+            html.Div([html.Img(src=foraging_image, className='header-2'), html.P("Foraging")],
                      className="div12"),
         ], className='parent', )
 
