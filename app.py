@@ -68,11 +68,11 @@ app.layout = html.Div(
                 html.Div(
                     children=
                     [
-                        html.Div(html.Img(src='assets/map_marker.png', className='header-2', id='sound-kuks'),
+                        html.Div(html.Img(src='assets/sound1.png', id='sound-kuks'),
                                  className="audio-btn"),
-                        html.Div(html.Img(src='assets/map_marker.png', className='header-2', id='sound-quaas'),
+                        html.Div(html.Img(src='assets/sound2.png', id='sound-quaas'),
                                  className="audio-btn"),
-                        html.Div(html.Img(src='assets/map_marker.png', className='header-2', id='sound-moans'),
+                        html.Div(html.Img(src='assets/sound3.png', id='sound-moans'),
                                  className="audio-btn"),
                     ],
                     className="squirrel-sounds",
@@ -112,7 +112,13 @@ app.layout = html.Div(
 def squirrel_click(feature):
     # user must have clicker on a squirrel marker
     if (feature is not None) and not (feature['properties']['cluster']):
+        # get data for marker
         facts = feature['properties']
+        # get coords for clicked marker ;)
+        coords = feature['geometry']
+        latitude = coords['coordinates'][1]
+        longitude = coords['coordinates'][0]
+
         # choose image paths based on the fact that applies to a certain squirrel
         if facts['Primary Fur Color'] == 'Gray':
             primary_color = "assets/color_gray.png"
@@ -215,7 +221,7 @@ def squirrel_click(feature):
 
         # the HTML for squirrel info panel
         return html.Div(children=[
-            html.P('', id='div01'),
+            html.P('fur', id='div01'),
             html.Div([html.P("PRIMARY COLOR  "), html.Span(facts['Primary Fur Color'])], className="div1"),
             html.Div(html.Img(src=primary_color,
                               className='color_circle'), className="div2"),
@@ -223,8 +229,9 @@ def squirrel_click(feature):
             html.Div(html.Img(src=highlight_color,
                               className='color_circle'), className="div4"),
             html.P('POSITION', id='div45'),
-            html.Div([html.P(f"latitude"), html.P(f"longitude"), html.P(f"datetime {date}, {facts['Shift']}")],
-                     className="div5"),
+            html.Div([html.Section([html.P("latitude "), html.Span(f"{latitude}°")]),
+                      html.Section([html.P("longitude "), html.Span(f"{longitude}°")]),
+                      html.Section([html.P("datetime "), html.Span(f"{date}, {facts['Shift']}")])], className="div5"),
             html.P('AGE', id='div56'),
             age_image1,
             age_image2,
