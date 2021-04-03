@@ -1,4 +1,4 @@
-SQURL - Implemented for Useless utility competition, The Gathering, TG, 2020.
+SQURL - Implemented for Useless utility competition, The Gathering, TG, 2021.
 
 SQURL is a web app that allows you to get to know the different squirrels that are located in central park, NYC. 
 In this app the squirrels are represented on a interactive map, and when pressing a squirrel marker, you are presenter cozy facts about that specific squirrel. Colorful images represent the squirrels qualities and actions.
