@@ -7,6 +7,6 @@ window.myNamespace = Object.assign({}, window.myNamespace, {
 });
 
 var greenIcon = L.icon({
-    iconUrl: 'assets/map_marker.png',
-    iconSize:     [78, 77], // size of the icon
+    iconUrl: 'assets/marker.png',
+    iconSize:     [75, 75], // size of the icon
 });
